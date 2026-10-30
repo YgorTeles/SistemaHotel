@@ -8,3 +8,4 @@ HospedeController hospedeController = new HospedeController(hospedeService);
 
 hospedeController.Cadastrar();
 hospedeController.Cadastrar();
+hospedeController.Listar();

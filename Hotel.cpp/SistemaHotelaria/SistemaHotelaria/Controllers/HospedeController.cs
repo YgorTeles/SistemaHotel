@@ -1,3 +1,4 @@
+using SistemaHotelaria.Entities;
 ﻿using SistemaHotelaria.Services;
 
 namespace SistemaHotelaria.Controllers;
@@ -33,6 +34,21 @@ public class HospedeController
         catch (ArgumentException ex)
         {
             Console.WriteLine($"Erro: {ex.Message}");
+        }
+    }
+    public void Listar()
+    {
+        List<Hospede> hospedes = _service.Listar();
+
+        if (hospedes.Count == 0)
+        {
+            Console.WriteLine("Nenhum hóspede cadastrado.");
+            return;
+        }
+
+        foreach (Hospede hospede in hospedes)
+        {
+            Console.WriteLine($"Nome: {hospede.Nome} | CPF: {hospede.Cpf} | Telefone: {hospede.Telefone} | Email: {hospede.Email}");
         }
     }
 }
