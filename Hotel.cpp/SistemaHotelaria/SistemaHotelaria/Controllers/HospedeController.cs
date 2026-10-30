@@ -1,7 +1,7 @@
-using SistemaHotelaria.Entities;
-﻿using SistemaHotelaria.Services;
-
+﻿
 namespace SistemaHotelaria.Controllers;
+using SistemaHotelaria.Entities;
+using SistemaHotelaria.Services;
 
 public class HospedeController
 {
@@ -49,6 +49,21 @@ public class HospedeController
         foreach (Hospede hospede in hospedes)
         {
             Console.WriteLine($"Nome: {hospede.Nome} | CPF: {hospede.Cpf} | Telefone: {hospede.Telefone} | Email: {hospede.Email}");
+        }
+    }
+    public void BuscarPorCpf()
+    {
+        Console.Write("CPF: ");
+        string cpf = Console.ReadLine() ?? string.Empty;
+
+        try
+        {
+            Hospede hospede = _service.BuscarPorCpf(cpf);
+            Console.WriteLine($"Nome: {hospede.Nome} | CPF: {hospede.Cpf} | Telefone: {hospede.Telefone} | Email: {hospede.Email}");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Erro: {ex.Message}");
         }
     }
 }

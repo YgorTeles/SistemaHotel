@@ -35,4 +35,17 @@ public class HospedeService
     {
         return _repository.ListarTodos();
     }
+    
+    public Hospede BuscarPorCpf(string cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf))
+            throw new ArgumentException("CPF é obrigatório.");
+
+        Hospede? hospede = _repository.BuscarPorCpf(cpf);
+
+        if (hospede == null)
+            throw new ArgumentException("Nenhum hóspede encontrado com esse CPF.");
+
+        return hospede;
+    }
 }
