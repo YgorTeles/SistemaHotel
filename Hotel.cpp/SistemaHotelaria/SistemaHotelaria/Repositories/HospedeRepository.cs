@@ -27,4 +27,27 @@ public class HospedeRepository
 
         return null;
     }
+
+    public void Atualizar(Hospede hospedeAtualizado)
+    {
+        for (int i = 0; i < _hospedes.Count; i++)
+        {
+            if (_hospedes[i].Id == hospedeAtualizado.Id)
+            {
+                _hospedes[i] = hospedeAtualizado;
+                return;
+            }
+        }
+    }
+    public void Remover(Guid id)
+    {
+        for (int i = 0; i < _hospedes.Count; i++)
+        {
+            if (_hospedes[i].Id == id)
+            {
+                _hospedes.RemoveAt(i);
+                return;
+            }
+        }
+    }
 }

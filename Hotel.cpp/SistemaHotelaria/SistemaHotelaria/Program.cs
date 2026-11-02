@@ -6,8 +6,11 @@ HospedeRepository hospedeRepository = new HospedeRepository();
 HospedeService hospedeService = new HospedeService(hospedeRepository);
 HospedeController hospedeController = new HospedeController(hospedeService);
 
-hospedeController.Cadastrar();
-hospedeController.Cadastrar();
+
+
+
 hospedeController.Cadastrar();
 hospedeController.Listar();
-hospedeController.BuscarPorCpf();
+hospedeController.Atualizar();
+hospedeController.Listar();
+hospedeController.Remover();

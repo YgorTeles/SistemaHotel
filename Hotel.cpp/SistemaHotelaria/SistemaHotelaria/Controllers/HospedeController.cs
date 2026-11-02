@@ -66,4 +66,43 @@ public class HospedeController
             Console.WriteLine($"Erro: {ex.Message}");
         }
     }
+    public void Atualizar()
+    {
+        Console.Write("CPF do hóspede: ");
+        string cpf = Console.ReadLine() ?? string.Empty;
+
+        Console.Write("Novo nome: ");
+        string nome = Console.ReadLine() ?? string.Empty;
+
+        Console.Write("Novo telefone: ");
+        string telefone = Console.ReadLine() ?? string.Empty;
+
+        Console.Write("Novo email: ");
+        string email = Console.ReadLine() ?? string.Empty;
+
+        try
+        {
+            _service.Atualizar(cpf, nome, telefone, email);
+            Console.WriteLine("Hóspede atualizado com sucesso!");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Erro: {ex.Message}");
+        }
+    }
+    public void Remover()
+    {
+        Console.Write("CPF do hóspede a remover: ");
+        string cpf = Console.ReadLine() ?? string.Empty;
+
+        try
+        {
+            _service.Remover(cpf);
+            Console.WriteLine("Hóspede removido com sucesso!");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Erro: {ex.Message}");
+        }
+    }
 }

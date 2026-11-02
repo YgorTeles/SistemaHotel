@@ -48,4 +48,23 @@ public class HospedeService
 
         return hospede;
     }
+
+    public void Atualizar(string cpf, string nome, string telefone, string email)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome é obrigatório.");
+
+        Hospede hospede = BuscarPorCpf(cpf);
+
+        hospede.Nome = nome;
+        hospede.Telefone = telefone;
+        hospede.Email = email;
+
+        _repository.Atualizar(hospede);
+    }
+    public void Remover(string cpf)
+    {
+        Hospede hospede = BuscarPorCpf(cpf);
+        _repository.Remover(hospede.Id);
+    }
 }
