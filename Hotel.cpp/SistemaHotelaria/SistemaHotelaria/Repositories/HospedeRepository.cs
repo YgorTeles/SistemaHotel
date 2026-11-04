@@ -5,13 +5,14 @@ namespace SistemaHotelaria.Repositories;
 public class HospedeRepository
 {
 
-    private List<Hospede> _hospedes = new List<Hospede>();  
+  
     private string _connectionString;
-
+    
     public HospedeRepository(string connectionString)
     {
         _connectionString = connectionString;
     }
+
 
     public void Adicionar(Hospede hospede)
     {
@@ -34,8 +35,9 @@ public class HospedeRepository
 
         conexao.Close();
 
-        _hospedes.Add(hospede);   // temporário
+        
     }
+
 
     public List<Hospede> ListarTodos()
     {
@@ -67,6 +69,7 @@ public class HospedeRepository
         return hospedes;
     }
     
+
     public Hospede? BuscarPorCpf(string cpf)
     {
         NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
@@ -96,28 +99,40 @@ public class HospedeRepository
         return hospede;
     }
 
-    
+
     public void Atualizar(Hospede hospedeAtualizado)
     {
-        for (int i = 0; i < _hospedes.Count; i++)
-        {
-            if (_hospedes[i].Id == hospedeAtualizado.Id)
-            {
-                _hospedes[i] = hospedeAtualizado;
-                return;
-            }
-        }
+        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        conexao.Open();
+
+        string sql = "UPDATE hospedes SET nome = @nome, telefone = @telefone, email = @email " +
+                     "WHERE id = @id";
+
+        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        comando.Parameters.AddWithValue("@nome", hospedeAtualizado.Nome);
+        comando.Parameters.AddWithValue("@telefone", hospedeAtualizado.Telefone);
+        comando.Parameters.AddWithValue("@email", hospedeAtualizado.Email);
+        comando.Parameters.AddWithValue("@id", hospedeAtualizado.Id);
+
+        comando.ExecuteNonQuery();
+
+        conexao.Close();
     }
-    
+
+
     public void Remover(Guid id)
     {
-        for (int i = 0; i < _hospedes.Count; i++)
-        {
-            if (_hospedes[i].Id == id)
-            {
-                _hospedes.RemoveAt(i);
-                return;
-            }
-        }
+        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        conexao.Open();
+
+        string sql = "DELETE FROM hospedes WHERE id = @id";
+
+        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        comando.Parameters.AddWithValue("@id", id);
+
+        comando.ExecuteNonQuery();
+
+        conexao.Close();
     }
 }
+
