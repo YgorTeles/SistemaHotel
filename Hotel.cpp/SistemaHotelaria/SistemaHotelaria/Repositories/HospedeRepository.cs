@@ -5,7 +5,7 @@ namespace SistemaHotelaria.Repositories;
 public class HospedeRepository
 {
 
-    private List<Hospede> _hospedes = new List<Hospede>();   // temporário
+    private List<Hospede> _hospedes = new List<Hospede>();  
     private string _connectionString;
 
     public HospedeRepository(string connectionString)
@@ -66,17 +66,37 @@ public class HospedeRepository
 
         return hospedes;
     }
+    
     public Hospede? BuscarPorCpf(string cpf)
     {
-        foreach (Hospede hospede in _hospedes)
+        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        conexao.Open();
+
+        string sql = "SELECT id, nome, cpf, telefone, email FROM hospedes WHERE cpf = @cpf";
+        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        comando.Parameters.AddWithValue("@cpf", cpf);
+
+        NpgsqlDataReader leitor = comando.ExecuteReader();
+
+        Hospede? hospede = null;
+
+        if (leitor.Read())
         {
-            if (hospede.Cpf == cpf)
-                return hospede;
+            hospede = new Hospede();
+            hospede.Id = leitor.GetGuid(0);
+            hospede.Nome = leitor.GetString(1);
+            hospede.Cpf = leitor.GetString(2);
+            hospede.Telefone = leitor.IsDBNull(3) ? string.Empty : leitor.GetString(3);
+            hospede.Email = leitor.IsDBNull(4) ? string.Empty : leitor.GetString(4);
         }
 
-        return null;
+        leitor.Close();
+        conexao.Close();
+
+        return hospede;
     }
 
+    
     public void Atualizar(Hospede hospedeAtualizado)
     {
         for (int i = 0; i < _hospedes.Count; i++)
@@ -88,6 +108,7 @@ public class HospedeRepository
             }
         }
     }
+    
     public void Remover(Guid id)
     {
         for (int i = 0; i < _hospedes.Count; i++)
