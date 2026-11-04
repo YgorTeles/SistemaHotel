@@ -6,8 +6,6 @@ HospedeRepository hospedeRepository = new HospedeRepository();
 HospedeService hospedeService = new HospedeService(hospedeRepository);
 HospedeController hospedeController = new HospedeController(hospedeService);
 
-
-
 bool rodando = true;
 
 while (rodando)
