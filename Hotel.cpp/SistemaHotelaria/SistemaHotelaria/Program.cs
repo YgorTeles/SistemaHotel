@@ -1,7 +1,25 @@
-﻿WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+﻿using SistemaHotelaria.Repositories;
+using SistemaHotelaria.Services;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+string? connectionString = Environment.GetEnvironmentVariable("HOTELARIA_DB");
+
+if (connectionString == null)
+{
+    Console.WriteLine("Variável de ambiente HOTELARIA_DB não encontrada.");
+    return;
+}
+
+builder.Services.AddScoped<HospedeRepository>(provider => new HospedeRepository(connectionString));
+builder.Services.AddScoped<HospedeService>();
+
+builder.Services.AddScoped<QuartoRepository>(provider => new QuartoRepository(connectionString));
+builder.Services.AddScoped<QuartoService>();
 
 WebApplication app = builder.Build();
 
 app.MapGet("/", () => "Sistema de Hotelaria no ar!");
+app.MapGet("/hospedes", (HospedeService service) => service.Listar());
 
 app.Run();
