@@ -1,17 +1,41 @@
 ﻿using SistemaHotelaria.Entities;
-
+using Npgsql;
 namespace SistemaHotelaria.Repositories;
 
 public class HospedeRepository
 {
-    private List<Hospede> _hospedes = new List<Hospede>();
+
+    private List<Hospede> _hospedes = new List<Hospede>();   // temporário
+    private string _connectionString;
+
+    public HospedeRepository(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
 
     public void Adicionar(Hospede hospede)
     {
         hospede.Id = Guid.NewGuid();
-        _hospedes.Add(hospede);
-    }
 
+        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        conexao.Open();
+
+        string sql = "INSERT INTO hospedes (id, nome, cpf, telefone, email) " +
+                     "VALUES (@id, @nome, @cpf, @telefone, @email)";
+
+        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        comando.Parameters.AddWithValue("@id", hospede.Id);
+        comando.Parameters.AddWithValue("@nome", hospede.Nome);
+        comando.Parameters.AddWithValue("@cpf", hospede.Cpf);
+        comando.Parameters.AddWithValue("@telefone", hospede.Telefone);
+        comando.Parameters.AddWithValue("@email", hospede.Email);
+
+        comando.ExecuteNonQuery();
+
+        conexao.Close();
+
+        _hospedes.Add(hospede);   // temporário
+    }
     public List<Hospede> ListarTodos()
     {
         return _hospedes;

@@ -1,8 +1,17 @@
 ﻿using SistemaHotelaria.Controllers;
 using SistemaHotelaria.Repositories;
 using SistemaHotelaria.Services;
+using Npgsql;
 
-HospedeRepository hospedeRepository = new HospedeRepository();
+string? connectionString = Environment.GetEnvironmentVariable("HOTELARIA_DB");
+
+if (connectionString == null)
+{
+    Console.WriteLine("Variável de ambiente HOTELARIA_DB não encontrada.");
+    return;
+}
+
+HospedeRepository hospedeRepository = new HospedeRepository(connectionString);
 HospedeService hospedeService = new HospedeService(hospedeRepository);
 HospedeController hospedeController = new HospedeController(hospedeService);
 
