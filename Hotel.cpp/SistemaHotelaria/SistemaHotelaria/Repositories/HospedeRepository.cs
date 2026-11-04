@@ -18,13 +18,13 @@ public class HospedeRepository
     {
         hospede.Id = Guid.NewGuid();
 
-        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
         string sql = "INSERT INTO hospedes (id, nome, cpf, telefone, email) " +
                      "VALUES (@id, @nome, @cpf, @telefone, @email)";
 
-        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
         comando.Parameters.AddWithValue("@id", hospede.Id);
         comando.Parameters.AddWithValue("@nome", hospede.Nome);
         comando.Parameters.AddWithValue("@cpf", hospede.Cpf);
@@ -33,7 +33,7 @@ public class HospedeRepository
 
         comando.ExecuteNonQuery();
 
-        conexao.Close();
+       
 
         
     }
@@ -43,13 +43,13 @@ public class HospedeRepository
     {
         List<Hospede> hospedes = new List<Hospede>();
 
-        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
         string sql = "SELECT id, nome, cpf, telefone, email FROM hospedes";
-        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
 
-        NpgsqlDataReader leitor = comando.ExecuteReader();
+        using NpgsqlDataReader leitor = comando.ExecuteReader();
 
         while (leitor.Read())
         {
@@ -63,23 +63,20 @@ public class HospedeRepository
             hospedes.Add(hospede);
         }
 
-        leitor.Close();
-        conexao.Close();
-
         return hospedes;
     }
     
 
     public Hospede? BuscarPorCpf(string cpf)
     {
-        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
         string sql = "SELECT id, nome, cpf, telefone, email FROM hospedes WHERE cpf = @cpf";
-        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
         comando.Parameters.AddWithValue("@cpf", cpf);
 
-        NpgsqlDataReader leitor = comando.ExecuteReader();
+        using NpgsqlDataReader leitor = comando.ExecuteReader();
 
         Hospede? hospede = null;
 
@@ -93,22 +90,19 @@ public class HospedeRepository
             hospede.Email = leitor.IsDBNull(4) ? string.Empty : leitor.GetString(4);
         }
 
-        leitor.Close();
-        conexao.Close();
-
         return hospede;
     }
 
 
     public void Atualizar(Hospede hospedeAtualizado)
     {
-        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
         string sql = "UPDATE hospedes SET nome = @nome, telefone = @telefone, email = @email " +
                      "WHERE id = @id";
 
-        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
         comando.Parameters.AddWithValue("@nome", hospedeAtualizado.Nome);
         comando.Parameters.AddWithValue("@telefone", hospedeAtualizado.Telefone);
         comando.Parameters.AddWithValue("@email", hospedeAtualizado.Email);
@@ -116,23 +110,22 @@ public class HospedeRepository
 
         comando.ExecuteNonQuery();
 
-        conexao.Close();
     }
 
 
     public void Remover(Guid id)
     {
-        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
         string sql = "DELETE FROM hospedes WHERE id = @id";
 
-        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+        using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
         comando.Parameters.AddWithValue("@id", id);
 
         comando.ExecuteNonQuery();
 
-        conexao.Close();
+        
     }
 }
 
