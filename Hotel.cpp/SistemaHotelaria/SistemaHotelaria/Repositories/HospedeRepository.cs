@@ -32,11 +32,8 @@ public class HospedeRepository
         comando.Parameters.AddWithValue("@email", hospede.Email);
 
         comando.ExecuteNonQuery();
-
-       
-
-        
     }
+
 
 
     public List<Hospede> ListarTodos()
