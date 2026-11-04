@@ -157,4 +157,48 @@ public class QuartoController
             Console.WriteLine($"Erro: {ex.Message}");
         }
     }
+    public void ExibirMenu()
+    {
+        bool noMenu = true;
+
+        while (noMenu)
+        {
+            Console.WriteLine();
+            Console.WriteLine("===== QUARTOS =====");
+            Console.WriteLine("1 - Cadastrar");
+            Console.WriteLine("2 - Listar");
+            Console.WriteLine("3 - Buscar por número");
+            Console.WriteLine("4 - Atualizar");
+            Console.WriteLine("5 - Remover");
+            Console.WriteLine("0 - Voltar");
+            Console.Write("Opção: ");
+
+            string opcao = Console.ReadLine() ?? string.Empty;
+
+            switch (opcao)
+            {
+                case "1":
+                    Cadastrar();
+                    break;
+                case "2":
+                    Listar();
+                    break;
+                case "3":
+                    BuscarPorNumero();
+                    break;
+                case "4":
+                    Atualizar();
+                    break;
+                case "5":
+                    Remover();
+                    break;
+                case "0":
+                    noMenu = false;
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida.");
+                    break;
+            }
+        }
+    }
 }
