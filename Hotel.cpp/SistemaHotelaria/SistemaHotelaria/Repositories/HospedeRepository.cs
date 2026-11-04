@@ -36,11 +36,36 @@ public class HospedeRepository
 
         _hospedes.Add(hospede);   // temporário
     }
+
     public List<Hospede> ListarTodos()
     {
-        return _hospedes;
-    }
+        List<Hospede> hospedes = new List<Hospede>();
 
+        NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
+        conexao.Open();
+
+        string sql = "SELECT id, nome, cpf, telefone, email FROM hospedes";
+        NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
+
+        NpgsqlDataReader leitor = comando.ExecuteReader();
+
+        while (leitor.Read())
+        {
+            Hospede hospede = new Hospede();
+            hospede.Id = leitor.GetGuid(0);
+            hospede.Nome = leitor.GetString(1);
+            hospede.Cpf = leitor.GetString(2);
+            hospede.Telefone = leitor.IsDBNull(3) ? string.Empty : leitor.GetString(3);
+            hospede.Email = leitor.IsDBNull(4) ? string.Empty : leitor.GetString(4);
+
+            hospedes.Add(hospede);
+        }
+
+        leitor.Close();
+        conexao.Close();
+
+        return hospedes;
+    }
     public Hospede? BuscarPorCpf(string cpf)
     {
         foreach (Hospede hospede in _hospedes)
