@@ -10,6 +10,7 @@ if (connectionString == null)
     Console.WriteLine("Variável de ambiente HOTELARIA_DB não encontrada.");
     return;
 }
+builder.Services.AddScoped<ReservaService>();
 builder.Services.AddScoped<ReservaRepository>(provider => new ReservaRepository(connectionString));
 builder.Services.AddScoped<HospedeRepository>(provider => new HospedeRepository(connectionString));
 builder.Services.AddScoped<HospedeService>();
