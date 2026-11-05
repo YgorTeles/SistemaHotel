@@ -1,0 +1,28 @@
+﻿<h1>Cadastrar hóspede</h1>
+
+@if (ViewBag.Erro != null)
+{
+    <p style="color: red">@ViewBag.Erro</p>
+}
+
+<form method="post" action="/Hospedes/Cadastrar">
+    <p>
+        <label>Nome</label><br />
+        <input name="nome" />
+    </p>
+    <p>
+        <label>CPF</label><br />
+        <input name="cpf" />
+    </p>
+    <p>
+        <label>Telefone</label><br />
+        <input name="telefone" />
+    </p>
+    <p>
+        <label>Email</label><br />
+        <input name="email" />
+    </p>
+    <button type="submit">Cadastrar</button>
+</form>
+
+<p><a href="/Hospedes">Voltar para a lista</a></p>

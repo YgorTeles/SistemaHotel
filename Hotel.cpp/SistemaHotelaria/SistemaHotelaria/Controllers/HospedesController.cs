@@ -18,4 +18,24 @@ public class HospedesController : Controller
         List<Hospede> hospedes = _service.Listar();
         return View(hospedes);
     }
+    [HttpGet]
+    public IActionResult Cadastrar()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Cadastrar(string? nome, string? cpf, string? telefone, string? email)
+    {
+        try
+        {
+            _service.Cadastrar(nome ?? string.Empty, cpf ?? string.Empty, telefone ?? string.Empty, email ?? string.Empty);
+            return RedirectToAction("Index");
+        }
+        catch (ArgumentException ex)
+        {
+            ViewBag.Erro = ex.Message;
+            return View();
+        }
+    }
 }

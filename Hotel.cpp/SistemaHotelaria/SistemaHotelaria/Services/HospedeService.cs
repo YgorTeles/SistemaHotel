@@ -20,6 +20,11 @@ public class HospedeService
         if (string.IsNullOrWhiteSpace(cpf))
             throw new ArgumentException("CPF é obrigatório.");
 
+        cpf = LimparCpf(cpf);
+
+        if (cpf.Length != 11)
+            throw new ArgumentException("CPF deve ter 11 dígitos.");
+
         if (_repository.BuscarPorCpf(cpf) != null)
             throw new ArgumentException("Já existe um hóspede com esse CPF.");
 
@@ -35,11 +40,16 @@ public class HospedeService
     {
         return _repository.ListarTodos();
     }
-    
+
     public Hospede BuscarPorCpf(string cpf)
     {
         if (string.IsNullOrWhiteSpace(cpf))
             throw new ArgumentException("CPF é obrigatório.");
+
+        cpf = LimparCpf(cpf);
+
+        if (cpf.Length != 11)
+            throw new ArgumentException("CPF deve ter 11 dígitos.");
 
         Hospede? hospede = _repository.BuscarPorCpf(cpf);
 
@@ -66,5 +76,17 @@ public class HospedeService
     {
         Hospede hospede = BuscarPorCpf(cpf);
         _repository.Remover(hospede.Id);
+    }
+    private string LimparCpf(string cpf)
+    {
+        string apenasNumeros = string.Empty;
+
+        foreach (char caractere in cpf)
+        {
+            if (char.IsDigit(caractere))
+                apenasNumeros += caractere;
+        }
+
+        return apenasNumeros;
     }
 }
