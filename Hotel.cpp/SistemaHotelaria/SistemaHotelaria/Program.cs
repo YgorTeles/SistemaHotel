@@ -21,6 +21,7 @@ builder.Services.AddScoped<QuartoService>();
 builder.Services.AddControllersWithViews();
 
 WebApplication app = builder.Build();
+app.UseStaticFiles();
 
 app.MapGet("/", () => Results.Redirect("/Hospedes"));
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");

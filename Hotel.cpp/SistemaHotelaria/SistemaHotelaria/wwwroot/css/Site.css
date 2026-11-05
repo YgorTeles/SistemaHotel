@@ -1,0 +1,193 @@
+﻿:root {
+    --primaria: #2563eb;
+    --primaria-escura: #1d4ed8;
+    --texto: #1f2937;
+    --suave: #6b7280;
+    --borda: #e5e7eb;
+    --fundo: #f4f6fb;
+    --perigo: #dc2626;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+}
+
+header {
+    background: #0f172a;
+}
+
+.topo {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.marca {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+    .marca span {
+        color: #60a5fa;
+    }
+
+nav a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 14px;
+    margin-left: 4px;
+    border-radius: 8px;
+}
+
+    nav a:hover {
+        background: #1e293b;
+        color: white;
+    }
+
+    nav a.ativo {
+        background: var(--primaria);
+        color: white;
+    }
+
+main {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 24px;
+}
+
+.cartao {
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+}
+
+a {
+    color: var(--primaria);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+th {
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--suave);
+    background: #f9fafb;
+    padding: 12px;
+    border-bottom: 2px solid var(--borda);
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--borda);
+}
+
+tr:hover td {
+    background: #f9fafb;
+}
+
+td a {
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+form p {
+    margin: 0 0 16px 0;
+}
+
+form br {
+    display: none;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font: inherit;
+}
+
+    input:focus {
+        outline: none;
+        border-color: var(--primaria);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    input[readonly] {
+        background: #f3f4f6;
+        color: var(--suave);
+    }
+
+button,
+a[href$="/Cadastrar"],
+a[href$="/Criar"] {
+    display: inline-block;
+    background: var(--primaria);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    button:hover,
+    a[href$="/Cadastrar"]:hover,
+    a[href$="/Criar"]:hover {
+        background: var(--primaria-escura);
+    }
+
+td form button {
+    background: white;
+    color: var(--perigo);
+    border: 1px solid #fecaca;
+    padding: 6px 12px;
+}
+
+    td form button:hover {
+        background: #fef2f2;
+    }
+
+p[style*="red"] {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 8px;
+}

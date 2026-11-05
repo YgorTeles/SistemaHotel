@@ -1,32 +1,30 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string controllerAtual = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+}
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sistema de Hotelaria</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; }
-        header { background: #1f3a5f; color: white; padding: 16px 24px; }
-        header h1 { margin: 0 0 8px 0; font-size: 22px; }
-        nav a { color: white; margin-right: 16px; text-decoration: none; }
-        main { padding: 24px; }
-        table { border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
-        th { background: #f0f0f0; }
-    </style>
+    <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
     <header>
-        <h1>Sistema de Hotelaria</h1>
-        <nav>
-            <a href="/Hospedes">Hóspedes</a>
-            <a href="/Quartos">Quartos</a>
-            <a href="/Reservas">Reservas</a>
-        </nav>
+        <div class="topo">
+            <a href="/" class="marca">Sistema de <span>Hotelaria</span></a>
+            <nav>
+                <a href="/Hospedes" class="@(controllerAtual == "Hospedes" ? "ativo" : "")">Hóspedes</a>
+                <a href="/Quartos" class="@(controllerAtual == "Quartos" ? "ativo" : "")">Quartos</a>
+                <a href="/Reservas" class="@(controllerAtual == "Reservas" ? "ativo" : "")">Reservas</a>
+            </nav>
+        </div>
     </header>
 
     <main>
-        @RenderBody()
+        <div class="cartao">
+            @RenderBody()
+        </div>
     </main>
 </body>
 </html>
