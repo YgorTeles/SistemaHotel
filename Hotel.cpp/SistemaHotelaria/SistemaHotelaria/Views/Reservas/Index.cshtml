@@ -1,0 +1,43 @@
+﻿@using SistemaHotelaria.Models
+@model List<ReservaDetalhe>
+
+<h1>Reservas</h1>
+
+<p><a href="/Reservas/Criar">Nova reserva</a></p>
+
+@if (Model.Count == 0)
+{
+    <p>Nenhuma reserva cadastrada.</p>
+}
+else
+{
+    <table>
+        <tr>
+            <th>Hóspede</th>
+            <th>CPF</th>
+            <th>Quarto</th>
+            <th>Entrada</th>
+            <th>Saída</th>
+            <th>Total</th>
+            <th>Ações</th>
+        </tr>
+        @foreach (ReservaDetalhe reserva in Model)
+        {
+            <tr>
+                <td>@reserva.NomeHospede</td>
+                <td>@reserva.CpfHospede</td>
+                <td>@reserva.NumeroQuarto</td>
+                <td>@reserva.DataEntrada.ToString("dd/MM/yyyy")</td>
+                <td>@reserva.DataSaida.ToString("dd/MM/yyyy")</td>
+                <td>@reserva.ValorTotal.ToString("C")</td>
+                <td>
+                    <form method="post" action="/Reservas/Cancelar" style="display: inline"
+                          onsubmit="return confirm('Cancelar esta reserva?');">
+                        <input type="hidden" name="id" value="@reserva.Id" />
+                        <button type="submit">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}

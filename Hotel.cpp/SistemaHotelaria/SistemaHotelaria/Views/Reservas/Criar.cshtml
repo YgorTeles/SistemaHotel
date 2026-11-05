@@ -1,0 +1,28 @@
+﻿<h1>Nova reserva</h1>
+
+@if (ViewBag.Erro != null)
+{
+    <p style="color: red">@ViewBag.Erro</p>
+}
+
+<form method="post" action="/Reservas/Criar">
+    <p>
+        <label>CPF do hóspede</label><br />
+        <input name="cpf" />
+    </p>
+    <p>
+        <label>Número do quarto</label><br />
+        <input name="numeroQuarto" />
+    </p>
+    <p>
+        <label>Data de entrada</label><br />
+        <input type="date" name="dataEntrada" />
+    </p>
+    <p>
+        <label>Data de saída</label><br />
+        <input type="date" name="dataSaida" />
+    </p>
+    <button type="submit">Reservar</button>
+</form>
+
+<p><a href="/Reservas">Voltar para a lista</a></p>

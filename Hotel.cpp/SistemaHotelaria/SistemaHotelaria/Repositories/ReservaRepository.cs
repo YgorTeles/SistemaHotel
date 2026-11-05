@@ -1,6 +1,6 @@
 ﻿using SistemaHotelaria.Entities;
 using Npgsql;
-
+using SistemaHotelaria.Models;
 namespace SistemaHotelaria.Repositories;
 
 public class ReservaRepository
@@ -32,28 +32,32 @@ public class ReservaRepository
 
         comando.ExecuteNonQuery();
     }
-
-    public List<Reserva> ListarTodos()
+    public List<ReservaDetalhe> ListarComDetalhes()
     {
-        List<Reserva> reservas = new List<Reserva>();
+        List<ReservaDetalhe> reservas = new List<ReservaDetalhe>();
 
         using NpgsqlConnection conexao = new NpgsqlConnection(_connectionString);
         conexao.Open();
 
-        string sql = "SELECT id, hospede_id, quarto_id, data_entrada, data_saida, valor_total " +
-                     "FROM reservas ORDER BY data_entrada";
+        string sql = "SELECT r.id, h.nome, h.cpf, q.numero, r.data_entrada, r.data_saida, r.valor_total " +
+                     "FROM reservas r " +
+                     "JOIN hospedes h ON h.id = r.hospede_id " +
+                     "JOIN quartos q ON q.id = r.quarto_id " +
+                     "ORDER BY r.data_entrada";
+
         using NpgsqlCommand comando = new NpgsqlCommand(sql, conexao);
         using NpgsqlDataReader leitor = comando.ExecuteReader();
 
         while (leitor.Read())
         {
-            Reserva reserva = new Reserva();
+            ReservaDetalhe reserva = new ReservaDetalhe();
             reserva.Id = leitor.GetGuid(0);
-            reserva.HospedeId = leitor.GetGuid(1);
-            reserva.QuartoId = leitor.GetGuid(2);
-            reserva.DataEntrada = leitor.GetDateTime(3);
-            reserva.DataSaida = leitor.GetDateTime(4);
-            reserva.ValorTotal = leitor.GetDecimal(5);
+            reserva.NomeHospede = leitor.GetString(1);
+            reserva.CpfHospede = leitor.GetString(2);
+            reserva.NumeroQuarto = leitor.GetInt32(3);
+            reserva.DataEntrada = leitor.GetDateTime(4);
+            reserva.DataSaida = leitor.GetDateTime(5);
+            reserva.ValorTotal = leitor.GetDecimal(6);
 
             reservas.Add(reserva);
         }

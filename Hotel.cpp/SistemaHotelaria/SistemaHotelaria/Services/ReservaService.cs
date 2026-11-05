@@ -1,4 +1,5 @@
 ﻿using SistemaHotelaria.Entities;
+using SistemaHotelaria.Models;
 using SistemaHotelaria.Repositories;
 
 namespace SistemaHotelaria.Services;
@@ -46,9 +47,9 @@ public class ReservaService
         _repository.Adicionar(reserva);
     }
 
-    public List<Reserva> Listar()
+    public List<ReservaDetalhe> Listar()
     {
-        return _repository.ListarTodos();
+        return _repository.ListarComDetalhes();
     }
 
     public void Cancelar(Guid id)
