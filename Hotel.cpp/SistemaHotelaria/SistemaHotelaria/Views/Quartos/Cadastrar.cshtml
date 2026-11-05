@@ -1,0 +1,28 @@
+﻿<h1>Cadastrar quarto</h1>
+
+@if (ViewBag.Erro != null)
+{
+    <p style="color: red">@ViewBag.Erro</p>
+}
+
+<form method="post" action="/Quartos/Cadastrar">
+    <p>
+        <label>Número</label><br />
+        <input name="numero" />
+    </p>
+    <p>
+        <label>Tipo (Solteiro, Casal, Suíte...)</label><br />
+        <input name="tipo" />
+    </p>
+    <p>
+        <label>Capacidade</label><br />
+        <input name="capacidade" />
+    </p>
+    <p>
+        <label>Valor da diária (use vírgula: 250,00)</label><br />
+        <input name="valorDiaria" />
+    </p>
+    <button type="submit">Cadastrar</button>
+</form>
+
+<p><a href="/Quartos">Voltar para a lista</a></p>

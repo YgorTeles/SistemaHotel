@@ -1,0 +1,46 @@
+﻿@using SistemaHotelaria.Entities
+@model List<Quarto>
+
+<h1>Quartos</h1>
+
+@if (TempData["Erro"] != null)
+{
+    <p style="color: red">@TempData["Erro"]</p>
+}
+
+<p><a href="/Quartos/Cadastrar">Cadastrar novo quarto</a></p>
+
+@if (Model.Count == 0)
+{
+    <p>Nenhum quarto cadastrado.</p>
+}
+else
+{
+    <table border="1">
+        <tr>
+            <th>Número</th>
+            <th>Tipo</th>
+            <th>Capacidade</th>
+            <th>Diária</th>
+            <th>Ações</th>
+        </tr>
+        @foreach (Quarto quarto in Model)
+        {
+            <tr>
+                <td>@quarto.Numero</td>
+                <td>@quarto.Tipo</td>
+                <td>@quarto.Capacidade</td>
+                <td>@quarto.ValorDiaria.ToString("C")</td>
+                <td>
+                    <a href="/Quartos/Editar?numero=@quarto.Numero">Editar</a>
+
+                    <form method="post" action="/Quartos/Remover" style="display: inline"
+                          onsubmit="return confirm('Remover este quarto?');">
+                        <input type="hidden" name="numero" value="@quarto.Numero" />
+                        <button type="submit">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}

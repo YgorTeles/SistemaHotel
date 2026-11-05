@@ -1,0 +1,31 @@
+﻿@using SistemaHotelaria.Entities
+@model Quarto
+
+<h1>Editar quarto</h1>
+
+@if (ViewBag.Erro != null)
+{
+    <p style="color: red">@ViewBag.Erro</p>
+}
+
+<form method="post" action="/Quartos/Editar">
+    <p>
+        <label>Número</label><br />
+        <input name="numero" value="@Model.Numero" readonly />
+    </p>
+    <p>
+        <label>Tipo</label><br />
+        <input name="tipo" value="@Model.Tipo" />
+    </p>
+    <p>
+        <label>Capacidade</label><br />
+        <input name="capacidade" value="@Model.Capacidade" />
+    </p>
+    <p>
+        <label>Valor da diária (use vírgula: 250,00)</label><br />
+        <input name="valorDiaria" value="@Model.ValorDiaria" />
+    </p>
+    <button type="submit">Salvar</button>
+</form>
+
+<p><a href="/Quartos">Voltar para a lista</a></p>
