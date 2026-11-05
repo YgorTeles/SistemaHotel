@@ -1,0 +1,29 @@
+﻿@using SistemaHotelaria.Entities
+@model List<Hospede>
+
+<h1>Hóspedes</h1>
+
+@if (Model.Count == 0)
+{
+    <p>Nenhum hóspede cadastrado.</p>
+}
+else
+{
+    <table border="1">
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Telefone</th>
+            <th>Email</th>
+        </tr>
+        @foreach (Hospede hospede in Model)
+        {
+            <tr>
+                <td>@hospede.Nome</td>
+                <td>@hospede.Cpf</td>
+                <td>@hospede.Telefone</td>
+                <td>@hospede.Email</td>
+            </tr>
+        }
+    </table>
+}

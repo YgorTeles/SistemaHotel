@@ -17,9 +17,11 @@ builder.Services.AddScoped<HospedeService>();
 builder.Services.AddScoped<QuartoRepository>(provider => new QuartoRepository(connectionString));
 builder.Services.AddScoped<QuartoService>();
 
+builder.Services.AddControllersWithViews();
+
 WebApplication app = builder.Build();
 
 app.MapGet("/", () => "Sistema de Hotelaria no ar!");
-app.MapGet("/hospedes", (HospedeService service) => service.Listar());
+app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
 
 app.Run();
