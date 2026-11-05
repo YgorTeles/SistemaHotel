@@ -75,4 +75,18 @@ public class HospedesController : Controller
             return View(hospede);
         }
     }
+    [HttpPost]
+    public IActionResult Remover(string? cpf)
+    {
+        try
+        {
+            _service.Remover(cpf ?? string.Empty);
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["Erro"] = ex.Message;
+        }
+
+        return RedirectToAction("Index");
+    }
 }
