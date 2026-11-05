@@ -21,7 +21,7 @@ builder.Services.AddControllersWithViews();
 
 WebApplication app = builder.Build();
 
-app.MapGet("/", () => "Sistema de Hotelaria no ar!");
+app.MapGet("/", () => Results.Redirect("/Hospedes"));
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
 
 app.Run();
