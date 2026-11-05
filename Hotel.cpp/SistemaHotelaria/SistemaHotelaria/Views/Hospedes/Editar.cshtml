@@ -1,0 +1,31 @@
+﻿@using SistemaHotelaria.Entities
+@model Hospede
+
+<h1>Editar hóspede</h1>
+
+@if (ViewBag.Erro != null)
+{
+    <p style="color: red">@ViewBag.Erro</p>
+}
+
+<form method="post" action="/Hospedes/Editar">
+    <p>
+        <label>CPF</label><br />
+        <input name="cpf" value="@Model.Cpf" readonly />
+    </p>
+    <p>
+        <label>Nome</label><br />
+        <input name="nome" value="@Model.Nome" />
+    </p>
+    <p>
+        <label>Telefone</label><br />
+        <input name="telefone" value="@Model.Telefone" />
+    </p>
+    <p>
+        <label>Email</label><br />
+        <input name="email" value="@Model.Email" />
+    </p>
+    <button type="submit">Salvar</button>
+</form>
+
+<p><a href="/Hospedes">Voltar para a lista</a></p>
