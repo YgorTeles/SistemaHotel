@@ -106,7 +106,6 @@ public class HospedeRepository
         comando.Parameters.AddWithValue("@id", hospedeAtualizado.Id);
 
         comando.ExecuteNonQuery();
-
     }
 
 
