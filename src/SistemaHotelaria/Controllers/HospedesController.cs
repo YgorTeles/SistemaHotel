@@ -1,122 +1,89 @@
 using Microsoft.AspNetCore.Mvc;
-using SistemaHotelaria.Entities;
 using SistemaHotelaria.Dtos;
+using SistemaHotelaria.Entities;
 using SistemaHotelaria.Services;
 
-namespace SistemaHotelaria.Controllers;
-
-// Erros vindos do service:
-//   KeyNotFoundException -> 404 (hóspede não encontrado)
-//   ArgumentException    -> 400 (dado inválido / regra de negócio)
-[ApiController]
-[Route("api/hospedes")]
-[Produces("application/json")]
-public class HospedesController : ControllerBase
+namespace SistemaHotelaria.Controllers
 {
-    private HospedeService _service;
-
-    public HospedesController(HospedeService service)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class HospedesController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly HospedeService _hospedeService;
 
-    /// <summary>Lista todos os hóspedes.</summary>
-    [HttpGet]
-    [ProducesResponseType(typeof(List<Hospede>), StatusCodes.Status200OK)]
-    public ActionResult<List<Hospede>> Listar()
-    {
-        return Ok(_service.Listar());
-    }
+        public HospedesController(HospedeService hospedeService)
+        {
+            this._hospedeService = hospedeService;
+        }
 
-    /// <summary>Busca um hóspede pelo CPF (aceita com ou sem máscara).</summary>
-    [HttpGet("{cpf}")]
-    [ProducesResponseType(typeof(Hospede), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Hospede> BuscarPorCpf(string cpf)
-    {
-        try
+        [HttpGet]
+        public IActionResult Listar()
         {
-            return Ok(_service.BuscarPorCpf(cpf));
+            try
+            {
+                List<Hospede> response = _hospedeService.Listar();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
-        catch (KeyNotFoundException erro)
-        {
-            return NotFound(new { mensagem = erro.Message });
-        }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
-        }
-    }
 
-    /// <summary>Cadastra um novo hóspede.</summary>
-    [HttpPost]
-    [ProducesResponseType(typeof(Hospede), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<Hospede> Cadastrar(CadastrarHospedeDto request)
-    {
-        try
+        [HttpGet("{cpf}")]
+        public IActionResult BuscarPorCpf(string cpf)
         {
-            Hospede hospede = _service.Cadastrar(
-                request.Nome ?? string.Empty,
-                request.Cpf ?? string.Empty,
-                request.Telefone ?? string.Empty,
-                request.Email ?? string.Empty);
+            try
+            {
+                Hospede response = _hospedeService.BuscarPorCpf(cpf);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
 
-            return Created($"/api/hospedes/{hospede.Cpf}", hospede);
-        }
-        catch (ArgumentException erro)
+        [HttpPost]
+        public IActionResult Cadastrar([FromBody] CadastrarHospedeDto dto)
         {
-            return BadRequest(new { mensagem = erro.Message });
+            try
+            {
+                Hospede response = _hospedeService.Cadastrar(dto.Nome, dto.Cpf, dto.Telefone, dto.Email);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
-    }
 
-    /// <summary>Atualiza nome, telefone e e-mail do hóspede. O CPF não pode ser alterado.</summary>
-    [HttpPut("{cpf}")]
-    [ProducesResponseType(typeof(Hospede), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Hospede> Atualizar(string cpf, AtualizarHospedeDto request)
-    {
-        try
+        [HttpPut("{cpf}")]
+        public IActionResult Atualizar(string cpf, [FromBody] AtualizarHospedeDto dto)
         {
-            Hospede hospede = _service.Atualizar(
-                cpf,
-                request.Nome ?? string.Empty,
-                request.Telefone ?? string.Empty,
-                request.Email ?? string.Empty);
+            try
+            {
+                Hospede response = _hospedeService.Atualizar(cpf, dto.Nome, dto.Telefone, dto.Email);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
 
-            return Ok(hospede);
-        }
-        catch (KeyNotFoundException erro)
+        [HttpDelete("{cpf}")]
+        public IActionResult Remover(string cpf)
         {
-            return NotFound(new { mensagem = erro.Message });
-        }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
-        }
-    }
-
-    /// <summary>Remove um hóspede.</summary>
-    [HttpDelete("{cpf}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult Remover(string cpf)
-    {
-        try
-        {
-            _service.Remover(cpf);
-            return NoContent();
-        }
-        catch (KeyNotFoundException erro)
-        {
-            return NotFound(new { mensagem = erro.Message });
-        }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
+            try
+            {
+                _hospedeService.Remover(cpf);
+                return Ok(new { mensagem = "Hóspede removido com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
     }
 }

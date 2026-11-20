@@ -1,135 +1,103 @@
 using Microsoft.AspNetCore.Mvc;
-using SistemaHotelaria.Entities;
 using SistemaHotelaria.Dtos;
+using SistemaHotelaria.Entities;
 using SistemaHotelaria.Services;
 
-namespace SistemaHotelaria.Controllers;
-
-// Erros vindos do service:
-//   KeyNotFoundException -> 404 (quarto não encontrado)
-//   ArgumentException    -> 400 (dado inválido / regra de negócio)
-[ApiController]
-[Route("api/quartos")]
-[Produces("application/json")]
-public class QuartosController : ControllerBase
+namespace SistemaHotelaria.Controllers
 {
-    private QuartoService _service;
-
-    public QuartosController(QuartoService service)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class QuartosController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly QuartoService _quartoService;
 
-    /// <summary>Lista todos os quartos, ordenados por número.</summary>
-    [HttpGet]
-    [ProducesResponseType(typeof(List<Quarto>), StatusCodes.Status200OK)]
-    public ActionResult<List<Quarto>> Listar()
-    {
-        return Ok(_service.Listar());
-    }
+        public QuartosController(QuartoService quartoService)
+        {
+            this._quartoService = quartoService;
+        }
 
-    /// <summary>Lista os quartos sem reserva (não cancelada) no período informado.</summary>
-    /// <param name="entrada">Data de entrada (YYYY-MM-DD).</param>
-    /// <param name="saida">Data de saída (YYYY-MM-DD).</param>
-    [HttpGet("disponiveis")]
-    [ProducesResponseType(typeof(List<Quarto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<List<Quarto>> ListarDisponiveis([FromQuery] DateTime entrada, [FromQuery] DateTime saida)
-    {
-        try
+        [HttpGet]
+        public IActionResult Listar()
         {
-            return Ok(_service.ListarDisponiveis(entrada, saida));
+            try
+            {
+                List<Quarto> response = _quartoService.Listar();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
-        }
-    }
 
-    /// <summary>Busca um quarto pelo número.</summary>
-    [HttpGet("{numero:int}")]
-    [ProducesResponseType(typeof(Quarto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Quarto> BuscarPorNumero(int numero)
-    {
-        try
+        [HttpGet("disponiveis")]
+        public IActionResult ListarDisponiveis([FromQuery] DateTime entrada, [FromQuery] DateTime saida)
         {
-            return Ok(_service.BuscarPorNumero(numero));
+            try
+            {
+                List<Quarto> response = _quartoService.ListarDisponiveis(entrada, saida);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
-        catch (KeyNotFoundException erro)
-        {
-            return NotFound(new { mensagem = erro.Message });
-        }
-    }
 
-    /// <summary>Cadastra um novo quarto (sempre criado como não ocupado).</summary>
-    [HttpPost]
-    [ProducesResponseType(typeof(Quarto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<Quarto> Cadastrar(CadastrarQuartoDto request)
-    {
-        try
+        [HttpGet("{numero:int}")]
+        public IActionResult BuscarPorNumero(int numero)
         {
-            Quarto quarto = _service.Cadastrar(
-                request.Numero,
-                request.Tipo ?? string.Empty,
-                request.Capacidade,
-                request.ValorDiaria);
+            try
+            {
+                Quarto response = _quartoService.BuscarPorNumero(numero);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
 
-            return Created($"/api/quartos/{quarto.Numero}", quarto);
-        }
-        catch (ArgumentException erro)
+        [HttpPost]
+        public IActionResult Cadastrar([FromBody] CadastrarQuartoDto dto)
         {
-            return BadRequest(new { mensagem = erro.Message });
+            try
+            {
+                Quarto response = _quartoService.Cadastrar(dto.Numero, dto.Tipo, dto.Capacidade, dto.ValorDiaria);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
-    }
 
-    /// <summary>Atualiza tipo, capacidade e diária. O número não pode ser alterado.</summary>
-    [HttpPut("{numero:int}")]
-    [ProducesResponseType(typeof(Quarto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Quarto> Atualizar(int numero, AtualizarQuartoDto request)
-    {
-        try
+        [HttpPut("{numero:int}")]
+        public IActionResult Atualizar(int numero, [FromBody] AtualizarQuartoDto dto)
         {
-            Quarto quarto = _service.Atualizar(
-                numero,
-                request.Tipo ?? string.Empty,
-                request.Capacidade,
-                request.ValorDiaria);
+            try
+            {
+                Quarto response = _quartoService.Atualizar(numero, dto.Tipo, dto.Capacidade, dto.ValorDiaria);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
 
-            return Ok(quarto);
-        }
-        catch (KeyNotFoundException erro)
+        [HttpDelete("{numero:int}")]
+        public IActionResult Remover(int numero)
         {
-            return NotFound(new { mensagem = erro.Message });
-        }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
-        }
-    }
-
-    /// <summary>Remove um quarto (não permitido se estiver ocupado).</summary>
-    [HttpDelete("{numero:int}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult Remover(int numero)
-    {
-        try
-        {
-            _service.Remover(numero);
-            return NoContent();
-        }
-        catch (KeyNotFoundException erro)
-        {
-            return NotFound(new { mensagem = erro.Message });
-        }
-        catch (ArgumentException erro)
-        {
-            return BadRequest(new { mensagem = erro.Message });
+            try
+            {
+                _quartoService.Remover(numero);
+                return Ok(new { mensagem = "Quarto removido com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
         }
     }
 }

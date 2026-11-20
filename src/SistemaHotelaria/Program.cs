@@ -20,7 +20,11 @@ builder.Services.AddScoped<HospedeService>();
 builder.Services.AddScoped<QuartoRepository>(provider => new QuartoRepository(connectionString));
 builder.Services.AddScoped<QuartoService>();
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        // Deixa as validações de campo obrigatório para os services (com as mensagens deles)
+        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    })
     .ConfigureApiBehaviorOptions(options =>
     {
         // JSON mal formado ou com tipo errado (ex.: texto no campo numero) também responde { "mensagem": "..." }
